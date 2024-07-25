@@ -2,9 +2,7 @@
 """First-In First-Out caching module.
 """
 from collections import OrderedDict
-
 from base_caching import BaseCaching
-
 
 class FIFOCache(BaseCaching):
     """Represents an object that allows storing and
@@ -15,19 +13,27 @@ class FIFOCache(BaseCaching):
         """Initializes the cache.
         """
         super().__init__()
-        self.cache_data = OrderedDict()
+        self.cache_data = OrderedDict()  # Initialize the cache as an OrderedDict
 
     def put(self, key, item):
         """Adds an item in the cache.
         """
         if key is None or item is None:
-            return
+            return  # Do nothing if key or item is None
+
+        # Add the item to the cache
         self.cache_data[key] = item
+
+        # Check if the cache exceeds the maximum allowed items
         if len(self.cache_data) > BaseCaching.MAX_ITEMS:
-            first_key, _ = self.cache_data.popitem(True)
+            # Remove the oldest item (FIFO)
+            first_key, _ = self.cache_data.popitem(last=False)
             print("DISCARD:", first_key)
 
     def get(self, key):
         """Retrieves an item by key.
         """
-        return self.cache_data.get(key, None
+        if key is None:
+            return None  # Return None if key is None
+
+        return self.cache_data.get(key, None)  # Return the value associated with the key
